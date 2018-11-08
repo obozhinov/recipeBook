@@ -1,18 +1,5 @@
 import * as React from 'react';
-
-
-interface RecipeProps {
-}
-
-interface RecipeState {
-  name: string;
-  time: string;
-  portions: number;
-  ingredients: string;
-  steps: string;
-}
-
-class AddRecipe extends React.Component<RecipeProps,RecipeState> {
+class AddRecipe extends React.Component{
 	constructor(props) {
 		super(props);
 		this.state = {

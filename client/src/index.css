@@ -26,8 +26,12 @@ ul.navigation li {
 	margin: 0;
 }
 
+.active {
+  background-color: #66b3ff;
+}
+
 label {
-	font-size: 10pt;
+	font-size: 12pt;
 }
 
 .recipeForm {

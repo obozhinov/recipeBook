@@ -1,18 +1,7 @@
 import * as React from 'react';
 // import GiphyImage from './GiphyImage';
 
-interface RecipeProps {
-}
-
-interface RecipeState {
-  name: string;
-  time: string;
-  portions: number;
-  ingredients: string;
-  steps: string;
-}
-
-class Recipe extends React.Component<RecipeProps,RecipeState> {
+class Recipe extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -95,23 +84,23 @@ class Recipe extends React.Component<RecipeProps,RecipeState> {
         <h2 id="Recipe">Update or Delete a recipe</h2>
         <form onSubmit={this.handleSubmit}>
 		<div>
-		<label>Recipe Name</label>
+		<label>Recipe Name</label><br/>
 		<input name="name" type="text" value={this.state.name} onChange={this.handleChangeName}/>
 		</div>
 		<div>
-		<label>Time Needed</label>
+		<label>Time Needed</label><br/>
 		<input name="time" type="text" value={this.state.time} onChange={this.handleChangeTime}/>
 		</div>
 		<div>
-		<label>Portions</label>
+		<label>Portions</label><br/>
 		<input name="portions" type="number" value={this.state.portions} onChange={this.handleChangePortions}/>
 		</div>
 		<div>
-		<label>Ingredients</label>
+		<label>Ingredients</label><br/>
 		<input name="ingredients" type="textarea" value={this.state.ingredients} onChange={this.handleChangeIngredients}/>
 		</div>
 		<div>
-		<label>Steps</label>
+		<label>Steps</label><br/>
 		<input name="steps" type="textarea" value={this.state.steps} onChange={this.handleChangeSteps}/>
 		</div>
 		<input type="submit" value="Submit"/>
