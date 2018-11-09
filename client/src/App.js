@@ -10,11 +10,11 @@ import AddRecipe from './Component/AddRecipe';
 import EditRecipe from './Component/EditRecipe';
 import Home from './Component/Home';
 
-const RecipeData = [
-    {id: 0, name: "pile s oriz", time: 90, portions: 6, ingredients: "pile, oriz, morkovi, sol, olio, voda", steps: "rezhesh, redish, pechesh"},
-    {id: 1, name: "pile s oriz", time: 90, portions: 6, ingredients: "pile, oriz, morkovi, sol, olio, voda", steps: "rezhesh, redish, pechesh"},
-    {id: 2, name: "pile s oriz", time: 90, portions: 6, ingredients: "pile, oriz, morkovi, sol, olio, voda", steps: "rezhesh, redish, pechesh"}
-  ];
+// const RecipeData = [
+//     {id: 0, name: "pile s oriz", time: 90, portions: 6, ingredients: "pile, oriz, morkovi, sol, olio, voda", steps: "rezhesh, redish, pechesh"},
+//     {id: 1, name: "pile s oriz", time: 90, portions: 6, ingredients: "pile, oriz, morkovi, sol, olio, voda", steps: "rezhesh, redish, pechesh"},
+//     {id: 2, name: "pile s oriz", time: 90, portions: 6, ingredients: "pile, oriz, morkovi, sol, olio, voda", steps: "rezhesh, redish, pechesh"}
+//   ];
 class App extends Component { 
   
   constructor(props) {
@@ -37,8 +37,8 @@ class App extends Component {
   }
   componentDidMount() {
     //For testing purpouses only
-    this.setState({recipes: RecipeData, isLoading: false});
-    // this.setState({isLoading: true});
+    // this.setState({recipes: RecipeData, isLoading: false});
+    this.setState({isLoading: true});
     fetch('http://localhost:8080/recipes')
       .then(response => response.json())
       .then(data => this.setState({recipes: data, isLoading: false}));
@@ -63,7 +63,10 @@ class App extends Component {
             <label>Portions: </label><br/>{recipe.portions}<br/>
             <label>Ingredients: </label><br/>{recipe.ingredients}<br/>
             <label>Steps: </label><br/>{recipe.steps}<br/>
-            <Link to="/edit-recipe"><input type="button" value="Edit" onClick={this.handleEdit}/></Link>
+            <Link to={{pathname: "/edit-recipe/",
+             state: {id:recipe.id, name: recipe.name, time: recipe.time,
+             portions: recipe.portions, ingredients: recipe.ingredients, steps: recipe.steps}}}>
+             <input type="button" value="Edit" onClick={this.handleEdit}/></Link>
             <input type="button" value="Delete" onClick={this.handleDelete}/>
         </div>
       );

@@ -4,13 +4,30 @@ import * as React from 'react';
 class Recipe extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			name: "",
-			time: "",
-			portions: "",
-			ingredients: "",
-			steps: ""
-		};
+		// tslint:disable-next-line:no-console
+		console.log("in constructor");
+		const editObj = this.props.location.state;		
+		// tslint:disable-next-line:no-console
+		console.log(editObj);
+		if(editObj != null) {
+			this.state = {
+				id: editObj.id,
+				name: editObj.name,
+				time: editObj.time,
+				portions: editObj.portions,
+				ingredients: editObj.ingredients,
+				steps: editObj.steps
+			};
+		} else {
+			this.state = {
+				id: "",
+				name: "",
+				time: "",
+				portions: 0,
+				ingredients: "",
+				steps: ""
+			};
+		}
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChangeName = this.handleChangeName.bind(this);		
 		this.handleChangeTime = this.handleChangeTime.bind(this);
@@ -23,8 +40,8 @@ class Recipe extends React.Component {
 		// tslint:disable-next-line:no-console
 		console.log("before fetch");
 		
-		// tslint:disable-next-line:no-console
-		this.postData(`http://localhost:8080/add-recipe`, this.state)// tslint:disable-next-line:no-console
+		
+		this.postData(`http://localhost:8080/edit-recipe`, this.state)// tslint:disable-next-line:no-console
 			.then(data => console.log(JSON.stringify(data))).catch(error => console.error(error));
 		e.preventDefault();
 	}
@@ -97,11 +114,11 @@ class Recipe extends React.Component {
 		</div>
 		<div>
 		<label>Ingredients</label><br/>
-		<input name="ingredients" type="textarea" value={this.state.ingredients} onChange={this.handleChangeIngredients}/>
+		<textarea name="ingredients" type="textarea" value={this.state.ingredients} onChange={this.handleChangeIngredients}/>
 		</div>
 		<div>
 		<label>Steps</label><br/>
-		<input name="steps" type="textarea" value={this.state.steps} onChange={this.handleChangeSteps}/>
+		<textarea name="steps" type="textarea" value={this.state.steps} onChange={this.handleChangeSteps}/>
 		</div>
 		<input type="submit" value="Submit"/>
 		</form>
