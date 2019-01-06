@@ -46,12 +46,28 @@ public class RecipeController {
         System.out.println(recipe);
         return recipe;
     }
+
+    @RequestMapping(value = "/delete-recipe", method = RequestMethod.DELETE)
+    public Recipe deleteRecipe(@RequestBody Long id) {
+//            @RequestParam String name, @RequestParam String time,
+//                             @RequestParam Integer portions, @RequestParam String ingredients,
+//                             @RequestParam String steps){
+        if(id == null) {
+            return null;
+        }
+        Recipe recipe = repository.findById(id).get();
+        System.out.println("To be deleted: " + recipe);
+        repository.deleteById(id);
+        System.out.println("Recipe " + id + "has been deleted successfully!");
+        return recipe;
+    }
+
     /*
     Function editRecipe, excepts A Recipe object (parsed JSON form /edit-recipe address), checks
     if the id exists in the repository, also if the name, ingredients and
      steps are null and returns null if not saves the updated recipe
      */
-    @RequestMapping(value = "/edit-recipe", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit-recipe", method = RequestMethod.PUT)
     public Recipe editRecipe(@RequestBody Recipe recipe) {
         //check if there's no valid id, recipe name, ingredients or steps, then can't update
         if(repository.findById(recipe.getId()) == null ||recipe.getName() == null ||
@@ -71,7 +87,7 @@ public class RecipeController {
     ":3000" can access the data.
      */
     @CrossOrigin(origins = "http://localhost/3000")
-    @RequestMapping("/recipe")
+    @GetMapping("/recipe")//try next @GetMapping("/recipe/{id}")
     public Recipe findRecipeById(@RequestParam(value = "id") Long id) {
         System.out.println(id);
         if(id != null) {

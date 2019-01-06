@@ -11,7 +11,7 @@ public class Recipe {
     @GeneratedValue
     private Long id;
     private String name;
-    private String timeNeeded;
+    private String time;
     private Integer portions;
     private String ingredients;
     private String steps;
@@ -22,20 +22,20 @@ public class Recipe {
         this.name = name;
     }
 
-    public Recipe(String name, String timeNeeded, Integer portions, String ingredients, String steps) {
+    public Recipe(String name, String time, Integer portions, String ingredients, String steps) {
         this.name = name;
-        this.timeNeeded = timeNeeded;
+        this.time = time;
         this.portions = portions;
         this.ingredients = ingredients;
         this.steps = steps;
     }
 
-    public String getTimeNeeded() {
-        return timeNeeded;
+    public String getTime() {
+        return time;
     }
 
-    public void setTimeNeeded(String timeNeeded) {
-        this.timeNeeded = timeNeeded;
+    public void setTimeNeeded(String time) {
+        this.time = time;
     }
 
     public Integer getPortions() {
@@ -83,7 +83,7 @@ public class Recipe {
         return "Recipe{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", timeNeeded='" + timeNeeded + '\'' +
+                ", timeNeeded='" + time + '\'' +
                 ", portions=" + portions +
                 ", ingredients='" + ingredients + '\'' +
                 ", steps='" + steps + '\'' +
