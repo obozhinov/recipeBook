@@ -1,28 +1,40 @@
-package com.olya.server.recipe;
+package com.olya.server.controllers;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import com.olya.server.recipe.Recipe;
+import com.olya.server.repository.RecipeRepository;
+import com.olya.server.service.RecipeService;
+import com.olya.server.service.ValidationErrorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/recipe")
 public class RecipeController {
 
+    @Autowired
     private RecipeRepository repository;
 
-    public RecipeController(RecipeRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private RecipeService recipeService;
+
+    @Autowired
+    private ValidationErrorService validation;
+
 
     /*
     Function allRecipes returns a collection of all the Recipe object stored in the repository.
     They are send to "/recipes" address as JSON. @CrossOrigin annotation added, so that
     the client from port ":3000" can access the data.
      */
-    @CrossOrigin(origins = "http://localhost/3000")
-    @RequestMapping("/recipes")
+    @RequestMapping("/all")
     public Collection<Recipe> allRecipes(){
         return repository.findAll().stream()
                 .collect(Collectors.toList());
@@ -33,18 +45,14 @@ public class RecipeController {
     Function addRecipe, excepts A Recipe object (parsed JSON form /add-recipe address), checks
     if the name, ingredients and steps are null and if not saves the updated recipe or returns null
     */
-    @RequestMapping(value = "/add-recipe", method = RequestMethod.POST)
-    public Recipe addRecipe(@RequestBody Recipe recipe) {
-//            @RequestParam String name, @RequestParam String time,
-//                             @RequestParam Integer portions, @RequestParam String ingredients,
-//                             @RequestParam String steps){
-        if(recipe.getName() == null ||
-                recipe.getIngredients() == null || recipe.getSteps() == null) {
-            return null;
-        }
-        repository.save(recipe);
-        System.out.println(recipe);
-        return recipe;
+    @PostMapping("")
+    public ResponseEntity<?> createRecipe(@Valid @RequestBody Recipe recipe, BindingResult result) throws Exception {
+
+        ResponseEntity<?> errorMap = validation.ValidationErrorService(result);
+        if(errorMap != null) return errorMap;
+
+        recipeService.saveRecipe(recipe);
+        return new ResponseEntity<Recipe>(recipe, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/delete-recipe", method = RequestMethod.DELETE)

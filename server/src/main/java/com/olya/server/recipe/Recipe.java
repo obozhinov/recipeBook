@@ -1,8 +1,12 @@
 package com.olya.server.recipe;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import java.util.Date;
 
 @Entity
 public class Recipe {
@@ -10,13 +14,16 @@ public class Recipe {
     @Id
     @GeneratedValue
     private Long id;
+    @NotBlank(message = "Recipe name required!")
     private String name;
     private String time;
     private Integer portions;
+    @NotBlank(message = "Recipe ingredients required!")
     private String ingredients;
+    @NotBlank(message = "Recipe steps required!")
     private String steps;
 
-    public Recipe(){};
+    public Recipe() {};
 
     public Recipe(String name) {
         this.name = name;

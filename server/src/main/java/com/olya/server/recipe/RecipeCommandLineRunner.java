@@ -1,10 +1,10 @@
 package com.olya.server.recipe;
 
+import com.olya.server.repository.RecipeRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 @Component
 public class RecipeCommandLineRunner implements CommandLineRunner {
