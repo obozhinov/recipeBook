@@ -4,11 +4,7 @@ import * as React from 'react';
 class Recipe extends React.Component {
 	constructor(props) {
 		super(props);
-		// tslint:disable-next-line:no-console
-		console.log("in constructor");
-		const editObj = this.props.location.state;		
-		// tslint:disable-next-line:no-console
-		console.log(editObj);
+		const editObj = this.props.location.state;
 		if(editObj != null) {
 			this.state = {
 				id: editObj.id,
@@ -37,10 +33,6 @@ class Recipe extends React.Component {
 	
 	} 
 	handleSubmit(e) {
-		// tslint:disable-next-line:no-console
-		console.log("before fetch");
-		
-		
 		this.postData(`http://localhost:8080/edit-recipe`, this.state)// tslint:disable-next-line:no-console
 			.then(data => console.log(JSON.stringify(data))).catch(error => console.error(error));
 		e.preventDefault();

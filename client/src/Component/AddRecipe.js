@@ -1,110 +1,142 @@
-import * as React from 'react';
-class AddRecipe extends React.Component{
-	constructor(props) {
-		super(props);
-		this.state = {
-			name: "name",
-			time: "name",
-			portions: 0,
-			ingredients: "ingredients",
-			steps: "steps"
-		};
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleChangeName = this.handleChangeName.bind(this);		
-		this.handleChangeTime = this.handleChangeTime.bind(this);
-		this.handleChangePortions = this.handleChangePortions.bind(this);
-		this.handleChangeIngredients = this.handleChangeIngredients.bind(this);
-		this.handleChangeSteps = this.handleChangeSteps.bind(this);
-	
-	} 
-	handleSubmit(e) {
-		alert('A recipe was submitted: ' + this.state.name);
-		
-		// tslint:disable-next-line:no-console
-		this.postData(`http://localhost:8080/add-recipe`, this.state)// tslint:disable-next-line:no-console
-			.then(data => console.log(JSON.stringify(data))).catch(error => console.error(error));
-		e.preventDefault();
-	}
+import * as React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { createRecipe } from "../actions/recipeActions";
+import classnames from "classnames";
+import "bootstrap/dist/css/bootstrap.css";
+class AddRecipe extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+      time: "",
+      portions: 0,
+      ingredients: "",
+      steps: "",
+      errors: {}
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
+  }
 
-	postData(url = ``, data = {}) {
-  // Default options are marked with *
-		return fetch(url, {
-			method: "POST", // *GET, POST, PUT, DELETE, etc.
-			mode: "cors", // no-cors, cors, *same-origin
-			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-			credentials: "same-origin", // include, same-origin, *omit
-			headers: {
-				"Content-Type": "application/json; charset=utf-8",
-				// "Content-Type": "application/x-www-form-urlencoded",
-			},
-			redirect: "follow", // manual, *follow, error
-			referrer: "no-referrer", // no-referrer, *client
-			body: JSON.stringify(data), // body data type must match "Content-Type" header
-			})
-			.then(response => response.json()); // parses response to JSON
-	}
-	
-	handleChangeName(event) {
-    this.setState({
-		name: event.target.value
-    });
-	}
-	
-	handleChangeTime(event) {
-    this.setState({
-		time: event.target.value
-    });
-	}
-	
-	handleChangePortions(event) {
-    this.setState({
-		portions: event.target.value
-    });
-	}
-	
-	handleChangeIngredients(event) {
-    this.setState({
-		ingredients: event.target.value
-    });
-	}
-	
-	handleChangeSteps(event) {
-    this.setState({
-		steps: event.target.value
-    });	
-	}
-	
-	
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const newRecipe = {
+      name: this.state.name,
+      time: this.state.time,
+      portions: this.state.portions,
+      ingredients: this.state.ingredients,
+      steps: this.state.steps
+    };
+    this.props.createRecipe(newRecipe, this.props.history);
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
   render() {
+    const { errors } = this.state;
     return (
       <div className="recipeForm">
         <h2 id="Link_Add_Recipe">Add Recipe</h2>
         <form onSubmit={this.handleSubmit}>
-		<div>
-		<label>Recipe Name</label><br/>
-		<input name="name" type="text" value={this.state.name} onChange={this.handleChangeName}/>
-		</div>
-		<div>
-		<label>Time Needed</label><br/>
-		<input name="time" type="text" value={this.state.time} onChange={this.handleChangeTime}/>
-		</div>
-		<div>
-		<label>Portions</label><br/>
-		<input name="portions" type="number" value={this.state.portions} onChange={this.handleChangePortions}/>
-		</div>
-		<div>
-		<label>Ingredients</label><br/>
-		<textarea name="ingredients"  value={this.state.ingredients} onChange={this.handleChangeIngredients}/>
-		</div>
-		<div>
-		<label>Steps</label><br/>
-		<textarea name="steps" value={this.state.steps} onChange={this.handleChangeSteps}/>
-		</div>
-		<input type="submit" value="Submit"/>
-		</form>
+          <div className="form-group">
+            <label htmlFor="controlTxtInput1">Recipe Name</label>
+            <input
+              className={classnames("form-control", {
+                "is-invalid": errors.name
+              })}
+              id="controlTxtInput1"
+              name="name"
+              type="text"
+              value={this.state.name}
+              onChange={this.onChange}
+              placeholder="Recipe name"
+            />
+            {errors.name && (
+              <div className="invalid-feedback">{errors.name}</div>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="controlTxtInput2">Time Needed</label>
+            <input
+              className="form-control"
+              id="controlTxtInput2"
+              name="time"
+              type="text"
+              value={this.state.time}
+              onChange={this.onChange}
+              placeholder="Time needed"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="controlNumberInput1">Portions</label>
+            <input
+              className="form-control"
+              id="controlNumberInput1"
+              name="portions"
+              type="number"
+              value={this.state.portions}
+              onChange={this.onChange}
+              placeholder="Portions"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="controlTextarea1">Ingredients</label>
+            <textarea
+              className={classnames("form-control", {
+                "is-invalid": errors.ingredients
+              })}
+              id="controlTextarea1"
+              name="ingredients"
+              value={this.state.ingredients}
+              onChange={this.onChange}
+              placeholder="Ingredients"
+            />
+            {errors.ingredients && (
+              <div className="invalid-feedback">{errors.ingredients}</div>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="controlTextarea2">Steps</label>
+            <textarea
+              className={classnames("form-control", {
+                "is-invalid": errors.steps
+              })}
+              id="controlTextarea2"
+              name="steps"
+              value={this.state.steps}
+              onChange={this.onChange}
+              placeholder="Steps"
+            />
+            {errors.steps && (
+              <div className="invalid-feedback">{errors.steps}</div>
+            )}
+          </div>
+          <button className="btn btn-dark" type="submit">
+            Submit
+          </button>
+        </form>
       </div>
     );
   }
 }
+AddRecipe.propTypes = {
+  createRecipe: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
+};
+const mapStateToProps = state => ({
+  errors: state.errors
+});
 
-export default AddRecipe;
+export default connect(
+  mapStateToProps,
+  { createRecipe }
+)(AddRecipe);

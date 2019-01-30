@@ -51,7 +51,7 @@ public class RecipeController {
         ResponseEntity<?> errorMap = validation.ValidationErrorService(result);
         if(errorMap != null) return errorMap;
 
-        recipeService.saveRecipe(recipe);
+        recipeService.saveOrUpdateRecipe(recipe);
         return new ResponseEntity<Recipe>(recipe, HttpStatus.CREATED);
     }
 
