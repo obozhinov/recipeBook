@@ -1,8 +1,8 @@
-import { GET_RECIPES } from "../actions/types";
+import { GET_RECIPES, GET_RECIPE } from "../actions/types";
 
 const initalState = {
-  projects: [],
-  project: {}
+  recipes: [],
+  recipe: {}
 };
 
 export default function(state = initalState, action) {
@@ -12,7 +12,11 @@ export default function(state = initalState, action) {
         ...state,
         recipes: action.payload
       };
-
+    case GET_RECIPE:
+      return {
+        ...state,
+        recipe: action.payload
+      };
     default:
       return state;
   }

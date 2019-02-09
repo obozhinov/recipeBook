@@ -1,16 +1,18 @@
 import * as React from "react";
+import { getRecipe, createRecipe } from "../actions/recipeActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { createRecipe } from "../actions/recipeActions";
 import classnames from "classnames";
-import "bootstrap/dist/css/bootstrap.css";
-class AddRecipe extends React.Component {
+
+class UpdateRecipe extends React.Component {
   constructor(props) {
     super(props);
+    // const editObj = this.props.location.state;
     this.state = {
+      id: "",
       name: "",
       time: "",
-      portions: 0,
+      portions: "",
       ingredients: "",
       steps: "",
       errors: {}
@@ -18,36 +20,42 @@ class AddRecipe extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
   }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
-    }
-  }
-
   handleSubmit(e) {
     e.preventDefault();
-    const newRecipe = {
+
+    const updatedRecipe = {
+      id: this.state.id,
       name: this.state.name,
       time: this.state.time,
       portions: this.state.portions,
       ingredients: this.state.ingredients,
       steps: this.state.steps
     };
-    this.props.createRecipe(newRecipe, this.props.history);
-  }
 
+    this.props.createRecipe(updatedRecipe, this.props.history);
+  }
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+    const { id, name, time, portions, ingredients, steps } = nextProps.recipe;
 
+    this.setState({ id, name, time, portions, ingredients, steps });
+  }
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    this.props.getRecipe(id, this.props.history);
+  }
   render() {
     const { errors } = this.state;
     return (
       <div className="container">
         <div className="row">
           <div className="col-md-6 m-auto py-3">
-            <h2 className="display-4 text-center">Add Recipe</h2>
+            <h2 className="display-4 text-center">Update Recipe</h2>
             <form onSubmit={this.handleSubmit}>
               <div className="form-group">
                 <label htmlFor="controlTxtInput1">Recipe Name</label>
@@ -55,7 +63,6 @@ class AddRecipe extends React.Component {
                   className={classnames("form-control", {
                     "is-invalid": errors.name
                   })}
-                  id="controlTxtInput1"
                   name="name"
                   type="text"
                   value={this.state.name}
@@ -70,7 +77,6 @@ class AddRecipe extends React.Component {
                 <label htmlFor="controlTxtInput2">Time Needed</label>
                 <input
                   className="form-control"
-                  id="controlTxtInput2"
                   name="time"
                   type="text"
                   value={this.state.time}
@@ -82,7 +88,6 @@ class AddRecipe extends React.Component {
                 <label htmlFor="controlNumberInput1">Portions</label>
                 <input
                   className="form-control"
-                  id="controlNumberInput1"
                   name="portions"
                   type="number"
                   value={this.state.portions}
@@ -96,7 +101,6 @@ class AddRecipe extends React.Component {
                   className={classnames("form-control", {
                     "is-invalid": errors.ingredients
                   })}
-                  id="controlTextarea1"
                   name="ingredients"
                   value={this.state.ingredients}
                   onChange={this.onChange}
@@ -112,7 +116,6 @@ class AddRecipe extends React.Component {
                   className={classnames("form-control", {
                     "is-invalid": errors.steps
                   })}
-                  id="controlTextarea2"
                   name="steps"
                   value={this.state.steps}
                   onChange={this.onChange}
@@ -132,15 +135,20 @@ class AddRecipe extends React.Component {
     );
   }
 }
-AddRecipe.propTypes = {
+
+UpdateRecipe.propTypes = {
+  getRecipe: PropTypes.func.isRequired,
   createRecipe: PropTypes.func.isRequired,
+  recipe: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
+
 const mapStateToProps = state => ({
+  recipe: state.recipe.recipe,
   errors: state.errors
 });
 
 export default connect(
   mapStateToProps,
-  { createRecipe }
-)(AddRecipe);
+  { getRecipe, createRecipe }
+)(UpdateRecipe);
